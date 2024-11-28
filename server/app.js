@@ -10,51 +10,19 @@ app.get('/', (req, res) => {
     res.send('Welcome to XYwow!');
 });
 
-function runCommand(command,taskName) {
-    const child = exec(command);
-    child.on('error', (error) => {
-        console.error(taskName+' error:', error);
-    });
-    child.on('close', (code) => {
-        if (code !== 0) {
-            console.warn(taskName+` warning: ${code}`);
-        }
-    });
-    if(!child.exitCode)console.log(taskName+" Success")
-    return child;
-}
-
-let CNbat = `"/start.bat"`;
-let JPbat = `"/start.bat"`;
-
-app.get('/cn', async(req, res) => {
-    let opId = req.body.opId;
-    let pwd = req.body.pwd;
-    if (opId == undefined || pwd == undefined) {
-        res.status(403).json({ msg: "Illegal request: Login Failed." });
-    }
-    let operatorList=JSON.parse(fs.readFileSync("operator.json", "utf-8"));
-    if (!operatorList.includes({ opId, pwd })) {
-        res.status(403).json({ msg: "Illegal request: No such operator." });
-    }
-    runCommand("taskkill /IM Sinmai.exe /F");
-    runCommand("taskkill /IM inject.exe /F");
-    runCommand("start " + CNbat);
+app.get('/cn', (req, res) => {
+    runCommand("tskill Sinmai");
+    runCommand(`start "D:\\F5i96XO0_2024\\2024\\Package\\start.bat"`);
 })
 
 app.get('/jp', (req, res) => {
-    let opId = req.body.opId;
-    let pwd = req.body.pwd;
-    if (opId == undefined || pwd == undefined) {
-        res.status(403).json({ msg: "Illegal request: Login Failed." });
-    }
-    let operatorList = JSON.parse(fs.readFileSync("operator.json", "utf-8"));
-    if (!operatorList.includes({ opId, pwd })) {
-        res.status(403).json({ msg: "Illegal request: No such operator." });
-    }
-    runCommand("taskkill /IM Sinmai.exe /F");
-    runCommand("taskkill /IM inject.exe /F");
-    runCommand("start " + JPbat);
+    runCommand("tskill Sinmai");
+    runCommand(`start "D:\\maimaI\\Package\\start.bat"`);
+})
+
+app.get('/en', (req, res) => {
+    runCommand("tskill Sinmai");
+    runCommand(`start "G:\\Package\\start.bat"`);
 })
 
 app.listen(port, () => {
